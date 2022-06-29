@@ -12,21 +12,31 @@ const TokenList = () => {
     const dispatch = useDispatch()
 
     const previousTokenValues = useSelector(state => state.tokenGenerator.previousTokenValues)
+    const data = useSelector(state => state.tokenGenerator.data)
 
     const newPreviousTokens = []
+    const tokenDetails = []
 
     for (let index in previousTokenValues) {
         newPreviousTokens.push(previousTokenValues[index])
     }
 
+    for(let index in data) {
+        tokenDetails.push(data[index])
+    }
+
+    // alert("The tokenDetails === " + JSON.stringify(tokenDetails));
+
+    // console.log("the tokenDetails === ", tokenDetails);
+
     const displayRows = () => {
         let id = 1
-        const newTokens = newPreviousTokens.map((data) => ({
+        const newTokens = tokenDetails.map((data) => ({
             id: id++,
-            previousTokens: data.tokenName,
-            createdAt: data.createdAt,
-            revoked: data.revoked,
-            expired: data.expired
+            previousTokens: data.key,
+            createdAt: data.created_at,
+            expired: data.expires_at,
+            revoked: data.revoked
         }))
         return (
             newTokens
@@ -34,15 +44,10 @@ const TokenList = () => {
     }
 
     const revokeToken = (modelIndex, model) => {
-        if(!previousTokenValues[modelIndex].revoked) {
+        if(!data[modelIndex].revoked) {
             const proceed = window.confirm("Are you sure you want to revoke this token?")
-            alert("the model index --- " + JSON.stringify(modelIndex));
-            if (proceed && !previousTokenValues[modelIndex].revoked) {
-                let newNumber = 0
-                const objectMapper = (object) => {
-                    let newObj = mapKeys(object, (value, key) => newNumber++)
-                    return newObj
-                }
+            alert("the data[modelIndex].revoked --- " + JSON.stringify(data[modelIndex].revoked));
+            if (proceed && !data[modelIndex].revoked) {
                 dispatch(setRevokedValue(true, modelIndex))
             }
         } else {
@@ -96,7 +101,6 @@ const TokenList = () => {
             type: "boolean",
             // flex: 1,
             renderCell: (params) => {
-                console.log("the params === ", params);
                 return (
                     <Button
                         variant="contained"
@@ -182,6 +186,7 @@ const TokenList = () => {
                         modelIndex = parseFloat(model.id)
                     }
                     if (model.field === 'action') {
+                        // console.log(parseFloat(modelIndex) - 1);
                         revokeToken(parseFloat(modelIndex) - 1, model)
 
                     } else {
