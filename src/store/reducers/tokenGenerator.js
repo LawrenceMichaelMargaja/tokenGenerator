@@ -1,14 +1,18 @@
 import {
-    SET_CURRENT_TOKEN_VALUE,
+    SET_CURRENT_TOKEN_VALUE, SET_DATA_VALUE,
     SET_EXPIRED_VALUE,
     SET_PREVIOUS_TOKEN_VALUE,
-    SET_REVOKED_VALUE
+    SET_REVOKED_VALUE, SET_TOKEN_TO_BE_VALIDATED, SET_TOKEN_TO_BE_VALIDATED_ID, SET_TOKEN_TO_BE_VALIDATED_TOKEN
 } from "../actions/actionTypes";
 
 const initialState = {
-    currentTokenValue: [123],
-    previousTokenValues: {}
-
+    currentTokenValue: [],
+    previousTokenValues: [],
+    data: {},
+    tokenToBeValidated: {
+        token: '',
+        id: ''
+    }
 }
 
 const Reducer = (state = initialState, action) => {
@@ -21,8 +25,41 @@ const Reducer = (state = initialState, action) => {
             return setRevokedValue(state, action.payload)
         case SET_EXPIRED_VALUE:
             return setExpiredValue(state, action.payload)
+        case SET_DATA_VALUE:
+            return setDataValue(state, action.payload)
+        case SET_TOKEN_TO_BE_VALIDATED_TOKEN:
+            return setTokenToBeValidatedToken(state, action.payload)
+        case SET_TOKEN_TO_BE_VALIDATED_ID:
+            return setTokenToBeValidatedId(state, action.payload)
         default:
             return state
+    }
+}
+
+const setTokenToBeValidatedToken = (state, payload) => {
+    return {
+        ...state,
+        tokenToBeValidated: {
+            ...state.tokenToBeValidated,
+            token: payload
+        }
+    }
+}
+
+const setTokenToBeValidatedId = (state, payload) => {
+    return {
+        ...state,
+        tokenToBeValidated: {
+            ...state.tokenToBeValidated,
+            id: payload
+        }
+    }
+}
+
+const setDataValue = (state, payload) => {
+    return {
+        ...state,
+        data: payload
     }
 }
 
@@ -43,12 +80,13 @@ const setPreviousTokenValues = (state, payload) => {
 }
 
 const setRevokedValue = (state, payload) => {
+    alert("The paylaod === " + JSON.stringify(state.data));
     return {
         ...state,
-        previousTokenValues: {
-            ...state.previousTokenValues,
+        data: {
+            ...state.data,
             [payload.tokenIndex]: {
-                ...state.previousTokenValues[payload.tokenIndex],
+                ...state.data[payload.tokenIndex],
                 revoked: payload.data
             }
         }
