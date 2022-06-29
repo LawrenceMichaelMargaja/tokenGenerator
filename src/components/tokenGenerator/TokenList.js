@@ -54,10 +54,7 @@ const TokenList = () => {
     const revokeToken = (modelIndex, modelToken) => {
         if(!data[modelIndex].revoked) {
             const proceed = window.confirm("Are you sure you want to revoke this token?")
-            alert("the data[modelIndex].revoked --- " + JSON.stringify(data[modelIndex].revoked));
             if (proceed && !data[modelIndex].revoked) {
-                // dispatch(setRevokedValue(true, modelIndex))
-                // console.log("the token === ", modelToken.row.previousTokens);
                 instance.delete(`/api/v0/token/${modelToken}/revoke`)
                     .then(response => console.log("THE RESPOSE FROM PUT === ", response))
                     .then(() => dispatch(setRevokedValue(true, modelIndex)))

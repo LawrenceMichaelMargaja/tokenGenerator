@@ -20,7 +20,7 @@ export default function Generator() {
     const data = useSelector(state => state.tokenGenerator.data)
     const thePreviousTokens = useSelector(state => state.tokenGenerator.previousTokenValues)
     const tokenToBeValidated = useSelector(state => state.tokenGenerator.tokenToBeValidated.token)
-    const tokenId = useSelector(state => state.tokenGenerator.tokenToBeValidated.id)
+    const token = useSelector(state => state.tokenGenerator.tokenToBeValidated.token)
 
     const [validateTokenValue, setValidateTokenValue] = useState('')
 
@@ -43,22 +43,15 @@ export default function Generator() {
     }
 
     const validateToken = (token) => {
-        // console.log(token);
-        // alert("The token ID === " + JSON.stringify(data[token].revoked));
-        if(data[token].revoked) {
-            alert("Token is already revoked.");
-        } else {
-            instance.get(`/api/v0/token/${tokenToBeValidated}/validate`)
-                .then(response => {
-                    if(response.data) {
-                        alert("response data === " + JSON.stringify(response.data));
-                        // alert("Token is Valid");
-                    } else {
-                        // alert("Token is not Valid");
-                    }
-                })
-                .catch(err => alert(err))
-        }
+        instance.get(`/api/v0/token/${token}/validate`)
+            .then(response => {
+                if(response.data) {
+                    alert('Token is validated!')
+                }
+            })
+            .catch(err => {
+                alert(JSON.stringify(err.response.data))
+            })
     }
 
     return (
@@ -85,12 +78,17 @@ export default function Generator() {
                             style={{
                                 width: '80%'
                             }}
+                            // disabled={true}
+                            placeholder={"Please click one of the 'Token Keys'"}
                             value={tokenToBeValidated}
-                            onChange={(e) => dispatch(setTokenToBeValidatedToken(e.target.value))}
+                            onChange={(e) => {
+                                const val = e.target.value
+                                dispatch(setTokenToBeValidatedToken(val))
+                            }}
                         />
                         <Button variant='contained'
                                 style={{padding: '1em', width: '20%', fontWeight: 'bold', backgroundColor: 'green'}}
-                                onClick={() => validateToken(tokenId)}
+                                onClick={() => validateToken(token)}
                         >
                             Validate
                         </Button>

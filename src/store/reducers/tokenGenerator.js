@@ -80,7 +80,6 @@ const setPreviousTokenValues = (state, payload) => {
 }
 
 const setRevokedValue = (state, payload) => {
-    alert("The paylaod === " + JSON.stringify(state.data));
     return {
         ...state,
         data: {
