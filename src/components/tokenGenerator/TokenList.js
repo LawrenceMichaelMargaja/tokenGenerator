@@ -43,6 +43,7 @@ const TokenList = () => {
             id: id++,
             previousTokens: data.key,
             createdAt: data.created_at,
+            expiresAt: data.expires_at,
             expired: data.expires_at >= Date.now() ? true : false,
             revoked: data.revoked
         }))
@@ -78,6 +79,14 @@ const TokenList = () => {
         {
             field: 'createdAt',
             headerName: 'CREATED AT',
+            headerAlign: 'center',
+            placeholder: 'test',
+            editable: false,
+            flex: 1
+        },
+        {
+            field: 'expiresAt',
+            headerName: 'EXPIRES AT',
             headerAlign: 'center',
             placeholder: 'test',
             editable: false,
