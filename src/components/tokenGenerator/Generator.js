@@ -8,7 +8,7 @@ import {
     setCurrentTokenValue,
     setDataValue,
     setPreviousTokenValues,
-    setTokenToBeValidated
+    setTokenToBeValidated, setTokenToBeValidatedToken
 } from "../../store/actions/tokenGenerator";
 import {size} from "lodash";
 import instance from "../../axios/axios-intance";
@@ -19,7 +19,8 @@ export default function Generator() {
     const currentTokenValue = useSelector(state => state.tokenGenerator.currentTokenValue)
     const data = useSelector(state => state.tokenGenerator.data)
     const thePreviousTokens = useSelector(state => state.tokenGenerator.previousTokenValues)
-    const tokenToBeValidated = useSelector(state => state.tokenGenerator.tokenToBeValidated)
+    const tokenToBeValidated = useSelector(state => state.tokenGenerator.tokenToBeValidated.token)
+    const tokenId = useSelector(state => state.tokenGenerator.tokenToBeValidated.id)
 
     const [validateTokenValue, setValidateTokenValue] = useState('')
 
@@ -42,15 +43,22 @@ export default function Generator() {
     }
 
     const validateToken = (token) => {
-        instance.get(`/api/v0/token/${token}/validate`)
-            .then(response => {
-                if(response.data) {
-                    alert("Token is Valid");
-                } else {
-                    alert("Token is not Valid");
-                }
-            })
-            .catch(err => alert(err))
+        // console.log(token);
+        // alert("The token ID === " + JSON.stringify(data[token].revoked));
+        if(data[token].revoked) {
+            alert("Token is already revoked.");
+        } else {
+            instance.get(`/api/v0/token/${tokenToBeValidated}/validate`)
+                .then(response => {
+                    if(response.data) {
+                        alert("response data === " + JSON.stringify(response.data));
+                        // alert("Token is Valid");
+                    } else {
+                        // alert("Token is not Valid");
+                    }
+                })
+                .catch(err => alert(err))
+        }
     }
 
     return (
@@ -78,11 +86,11 @@ export default function Generator() {
                                 width: '80%'
                             }}
                             value={tokenToBeValidated}
-                            onChange={(e) => dispatch(setTokenToBeValidated(e.target.value))}
+                            onChange={(e) => dispatch(setTokenToBeValidatedToken(e.target.value))}
                         />
                         <Button variant='contained'
                                 style={{padding: '1em', width: '20%', fontWeight: 'bold', backgroundColor: 'green'}}
-                                onClick={() => validateToken(tokenToBeValidated)}
+                                onClick={() => validateToken(tokenId)}
                         >
                             Validate
                         </Button>

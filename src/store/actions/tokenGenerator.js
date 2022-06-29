@@ -2,7 +2,7 @@ import {
     SET_CURRENT_TOKEN_VALUE, SET_DATA_VALUE,
     SET_EXPIRED_VALUE,
     SET_PREVIOUS_TOKEN_VALUE,
-    SET_REVOKED_VALUE, SET_TOKEN_TO_BE_VALIDATED
+    SET_REVOKED_VALUE, SET_TOKEN_TO_BE_VALIDATED, SET_TOKEN_TO_BE_VALIDATED_ID, SET_TOKEN_TO_BE_VALIDATED_TOKEN
 } from "./actionTypes";
 
 export const setDataValue = (data) => {
@@ -33,9 +33,16 @@ export const setRevokedValue = (data, tokenIndex) => {
     }
 }
 
-export const setTokenToBeValidated = (data) => {
+export const setTokenToBeValidatedToken = (data) => {
     return {
-        type: SET_TOKEN_TO_BE_VALIDATED,
+        type: SET_TOKEN_TO_BE_VALIDATED_TOKEN,
+        payload: data
+    }
+}
+
+export const setTokenToBeValidatedId = (data) => {
+    return {
+        type: SET_TOKEN_TO_BE_VALIDATED_ID,
         payload: data
     }
 }

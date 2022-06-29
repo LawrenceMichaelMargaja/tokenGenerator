@@ -2,14 +2,17 @@ import {
     SET_CURRENT_TOKEN_VALUE, SET_DATA_VALUE,
     SET_EXPIRED_VALUE,
     SET_PREVIOUS_TOKEN_VALUE,
-    SET_REVOKED_VALUE, SET_TOKEN_TO_BE_VALIDATED
+    SET_REVOKED_VALUE, SET_TOKEN_TO_BE_VALIDATED, SET_TOKEN_TO_BE_VALIDATED_ID, SET_TOKEN_TO_BE_VALIDATED_TOKEN
 } from "../actions/actionTypes";
 
 const initialState = {
     currentTokenValue: [],
     previousTokenValues: [],
     data: {},
-    tokenToBeValidated: ''
+    tokenToBeValidated: {
+        token: '',
+        id: ''
+    }
 }
 
 const Reducer = (state = initialState, action) => {
@@ -24,17 +27,32 @@ const Reducer = (state = initialState, action) => {
             return setExpiredValue(state, action.payload)
         case SET_DATA_VALUE:
             return setDataValue(state, action.payload)
-        case SET_TOKEN_TO_BE_VALIDATED:
-            return setTokenToBeValidated(state, action.payload)
+        case SET_TOKEN_TO_BE_VALIDATED_TOKEN:
+            return setTokenToBeValidatedToken(state, action.payload)
+        case SET_TOKEN_TO_BE_VALIDATED_ID:
+            return setTokenToBeValidatedId(state, action.payload)
         default:
             return state
     }
 }
 
-const setTokenToBeValidated = (state, payload) => {
+const setTokenToBeValidatedToken = (state, payload) => {
     return {
         ...state,
-        tokenToBeValidated: payload
+        tokenToBeValidated: {
+            ...state.tokenToBeValidated,
+            token: payload
+        }
+    }
+}
+
+const setTokenToBeValidatedId = (state, payload) => {
+    return {
+        ...state,
+        tokenToBeValidated: {
+            ...state.tokenToBeValidated,
+            id: payload
+        }
     }
 }
 

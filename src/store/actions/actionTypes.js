@@ -6,4 +6,5 @@ export const SET_PREVIOUS_TOKEN_VALUE = '@@tokenGenerator/SET_PREVIOUS_TOKEN_VAL
 export const SET_REVOKED_VALUE = '@@tokenGenerator/SET_REVOKED_VALUE'
 export const SET_EXPIRED_VALUE = '@@tokenGenerator/SET_EXPIRED_VALUE'
 export const SET_DATA_VALUE = '@@tokenGenerator/SET_DATA_VALUE'
-export const SET_TOKEN_TO_BE_VALIDATED = '@@tokenGenerator/SET_TOKEN_TO_BE_VALIDATED'
+export const SET_TOKEN_TO_BE_VALIDATED_TOKEN = '@@tokenGenerator/SET_TOKEN_TO_BE_VALIDATED_TOKEN'
+export const SET_TOKEN_TO_BE_VALIDATED_ID = '@@tokenGenerator/SET_TOKEN_TO_BE_VALIDATED_ID'

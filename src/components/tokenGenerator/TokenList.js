@@ -4,8 +4,15 @@ import {DataGrid} from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import {Button, MenuItem, Select} from "@mui/material";
 import {mapKeys} from "lodash";
-import {setRevokedValue, setTokenToBeValidated} from "../../store/actions/tokenGenerator";
+import {
+    setRevokedValue,
+    setTokenToBeValidated,
+    setTokenToBeValidatedId,
+    setTokenToBeValidatedToken
+} from "../../store/actions/tokenGenerator";
 import {renderBooleanCell} from "@mui/x-data-grid/components/cell/GridBooleanCell";
+import axios from "axios";
+import instance from "../../axios/axios-intance";
 
 const TokenList = () => {
 
@@ -13,6 +20,7 @@ const TokenList = () => {
 
     const previousTokenValues = useSelector(state => state.tokenGenerator.previousTokenValues)
     const data = useSelector(state => state.tokenGenerator.data)
+    const tokenId = useSelector(state => state.tokenGenerator.tokenToBeValidated.id)
 
     const newPreviousTokens = []
     const tokenDetails = []
@@ -35,7 +43,7 @@ const TokenList = () => {
             id: id++,
             previousTokens: data.key,
             createdAt: data.created_at,
-            expired: data.expires_at,
+            expired: data.expires_at >= Date.now() ? true : false,
             revoked: data.revoked
         }))
         return (
@@ -43,12 +51,17 @@ const TokenList = () => {
         )
     }
 
-    const revokeToken = (modelIndex, model) => {
+    const revokeToken = (modelIndex, modelToken) => {
         if(!data[modelIndex].revoked) {
             const proceed = window.confirm("Are you sure you want to revoke this token?")
             alert("the data[modelIndex].revoked --- " + JSON.stringify(data[modelIndex].revoked));
             if (proceed && !data[modelIndex].revoked) {
-                dispatch(setRevokedValue(true, modelIndex))
+                // dispatch(setRevokedValue(true, modelIndex))
+                // console.log("the token === ", modelToken.row.previousTokens);
+                instance.delete(`/api/v0/token/${modelToken}/revoke`)
+                    .then(response => console.log("THE RESPOSE FROM PUT === ", response))
+                    .then(() => dispatch(setRevokedValue(true, modelIndex)))
+                    .catch(err => console.log(err))
             }
         } else {
             alert("Token is already revoked.");
@@ -186,12 +199,15 @@ const TokenList = () => {
                     }
                     if (model.field === 'action') {
                         // console.log(parseFloat(modelIndex) - 1);
-                        revokeToken(parseFloat(modelIndex) - 1, model)
+                        revokeToken(parseFloat(modelIndex) - 1, model.row.previousTokens)
+                        dispatch(setTokenToBeValidatedId(parseFloat(modelIndex) - 1))
 
                     } else if(model.field === 'previousTokens') {
                         // alert("the model === " + JSON.stringify(model.value));
-                        dispatch(setTokenToBeValidated(model.value))
+                        dispatch(setTokenToBeValidatedToken(model.value))
+                        dispatch(setTokenToBeValidatedId(parseFloat(modelIndex) - 1))
                     } else {
+                        dispatch(setTokenToBeValidatedId(parseFloat(modelIndex) - 1))
                         return
                     }
                 }}
