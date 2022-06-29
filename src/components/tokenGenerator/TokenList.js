@@ -4,7 +4,7 @@ import {DataGrid} from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import {Button, MenuItem, Select} from "@mui/material";
 import {mapKeys} from "lodash";
-import {setRevokedValue} from "../../store/actions/tokenGenerator";
+import {setRevokedValue, setTokenToBeValidated} from "../../store/actions/tokenGenerator";
 import {renderBooleanCell} from "@mui/x-data-grid/components/cell/GridBooleanCell";
 
 const TokenList = () => {
@@ -54,13 +54,12 @@ const TokenList = () => {
             alert("Token is already revoked.");
             return
         }
-
     }
 
     const columns = [
         {
             field: 'previousTokens',
-            headerName: 'PREVIOUS TOKENS',
+            headerName: 'TOKEN KEYS',
             headerAlign: 'center',
             placeholder: 'test',
             editable: false,
@@ -114,7 +113,7 @@ const TokenList = () => {
     ];
 
     return (
-        <div style={{height: '500px'}}>
+        <div style={{height: '400px'}}>
             <DataGrid
                 sx={{
                     width: '100%',
@@ -189,6 +188,9 @@ const TokenList = () => {
                         // console.log(parseFloat(modelIndex) - 1);
                         revokeToken(parseFloat(modelIndex) - 1, model)
 
+                    } else if(model.field === 'previousTokens') {
+                        // alert("the model === " + JSON.stringify(model.value));
+                        dispatch(setTokenToBeValidated(model.value))
                     } else {
                         return
                     }

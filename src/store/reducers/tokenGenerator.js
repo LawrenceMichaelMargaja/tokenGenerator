@@ -2,13 +2,14 @@ import {
     SET_CURRENT_TOKEN_VALUE, SET_DATA_VALUE,
     SET_EXPIRED_VALUE,
     SET_PREVIOUS_TOKEN_VALUE,
-    SET_REVOKED_VALUE
+    SET_REVOKED_VALUE, SET_TOKEN_TO_BE_VALIDATED
 } from "../actions/actionTypes";
 
 const initialState = {
     currentTokenValue: [],
     previousTokenValues: [],
-    data: {}
+    data: {},
+    tokenToBeValidated: ''
 }
 
 const Reducer = (state = initialState, action) => {
@@ -23,8 +24,17 @@ const Reducer = (state = initialState, action) => {
             return setExpiredValue(state, action.payload)
         case SET_DATA_VALUE:
             return setDataValue(state, action.payload)
+        case SET_TOKEN_TO_BE_VALIDATED:
+            return setTokenToBeValidated(state, action.payload)
         default:
             return state
+    }
+}
+
+const setTokenToBeValidated = (state, payload) => {
+    return {
+        ...state,
+        tokenToBeValidated: payload
     }
 }
 
